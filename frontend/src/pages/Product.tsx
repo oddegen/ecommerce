@@ -60,7 +60,7 @@ const Product = () => {
                         <p>Select Size</p>
                         <div className="flex gap-2">
                             {productData.sizes.map((sz, idx) => (
-                                <button onClick={() => setSize(sz)} className={`border border-gray-300 py-2 px-4 bg-gray-100 ${size === sz ? 'border-orange-300' : ''}`} key={idx}>{sz}</button>
+                                <button onClick={() => setSize(sz)} className={`border py-2 px-4 bg-gray-100 ${size === sz ? 'border-orange-300' : ''}`} key={idx}>{sz}</button>
                             ))}
                         </div>
                     </div>
@@ -76,10 +76,10 @@ const Product = () => {
 
             <div className="mt-20">
                 <div className="flex">
-                    <p className="border border-gray-300 px-5 py-3 text-sm">Description</p>
-                    <p className="border-y border-r border-gray-300 px-5 py-3 text-sm">Reviews (122)</p>
+                    <p className="border px-5 py-3 text-sm">Description</p>
+                    <p className="border-y border-r px-5 py-3 text-sm">Reviews (122)</p>
                 </div>
-                <div className="flex flex-col gap-4 border border-gray-300 px-6 py-6 text-sm text-gray-500 mt-1">
+                <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500 mt-1">
                     <p>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, a. Libero cum nulla consequuntur provident id pariatur omnis at aspernatur molestias, voluptatum eligendi quae neque quisquam tempore ipsam atque aut?
                         Aspernatur provident suscipit mollitia quisquam est vero expedita, repellendus libero ratione hic? Quod ab aliquam, debitis odio atque nihil laborum sunt recusandae, quo possimus deserunt rerum expedita animi corporis voluptas!

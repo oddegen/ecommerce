@@ -6,6 +6,17 @@
   --font-sans: "Outfit", sans-serif;
 }
 
+@layer base {
+  .border,
+  [class*="border-"] {
+    @apply border-gray-300;
+  }
+
+  hr {
+    @apply text-gray-300;
+  }
+}
+
 a.active {
   hr {
     @apply visible;

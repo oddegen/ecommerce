@@ -1,7 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { products } from "../assets/assets";
 import { IProduct, SizeOptions } from "../types";
 import { toast } from "react-toastify";
+import { type NavigateFunction, useNavigate } from "react-router-dom";
+
+type ICartItems = Record<string, Partial<Record<SizeOptions, number>>>;
 
 interface IShopContext {
     products: IProduct[];
@@ -11,12 +14,14 @@ interface IShopContext {
     setSearch: React.Dispatch<React.SetStateAction<string>>;
     showSearch: boolean;
     setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
-    cartItem: ICartItem;
+    cartItems: ICartItems;
     addToCart: (productId: string, size: SizeOptions) => Promise<void>;
     getCartCount: () => number;
+    updateQuantity: (itemId: string, size: SizeOptions, quantity: number) => Promise<void>;
+    getCartAmount: () => number;
+    navigate: NavigateFunction;
 }
 
-type ICartItem = Record<string, Partial<Record<SizeOptions, number>>>;
 
 const ShopContext = createContext<IShopContext | null>(null);
 
@@ -25,7 +30,8 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
     const delivery_fee = 10
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
-    const [cartItem, setCartItem] = useState<ICartItem>({});
+    const [cartItems, setCartItems] = useState<ICartItems>({});
+    const navigate = useNavigate();
 
     const addToCart = async (productId: string, size: SizeOptions) => {
         if (!size) {
@@ -33,7 +39,7 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
-        const cartData = structuredClone(cartItem);
+        const cartData = structuredClone(cartItems);
 
         if (cartData[productId]) {
             if (cartData[productId][size]) {
@@ -47,24 +53,52 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
                 [size]: 1
             }
         }
-        setCartItem(cartData);
+        setCartItems(cartData);
     }
 
     const getCartCount = () => {
         let count = 0;
-        for (const key in cartItem) {
-            if (cartItem[key]) {
-                for (const size in cartItem[key]) {
-                    count += cartItem[key][size as SizeOptions] || 0;
+        for (const key in cartItems) {
+            if (cartItems[key]) {
+                for (const size in cartItems[key]) {
+                    count += cartItems[key][size as SizeOptions] || 0;
                 }
             }
         }
         return count;
     }
 
-    useEffect(() => {
-        console.log(cartItem);
-    }, [cartItem])
+    const updateQuantity = async (itemId: string, size: SizeOptions, quantity: number) => {
+        const cartData = structuredClone(cartItems);
+
+        cartData[itemId][size] = quantity;
+
+        setCartItems(cartData);
+    }
+
+    const getCartAmount = () => {
+        let totalAmount = 0;
+
+        for (const items in cartItems) {
+            if (cartItems[items]) {
+                const itemInfo = products.find((product) => product._id === items);
+
+                if (itemInfo) {
+                    for (const size in cartItems[items]) {
+                        try {
+                            if ((cartItems[items][size as SizeOptions] ?? 0) > 0) {
+                                totalAmount += (itemInfo.price * (cartItems[items][size as SizeOptions]!));
+                            }
+                        } catch (error) {
+                            console.error("Error calculating cart amount:", error);
+                        }
+                    }
+                }
+            }
+        }
+
+        return totalAmount;
+    }
 
     const value = {
         products,
@@ -74,9 +108,12 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
         setSearch,
         showSearch,
         setShowSearch,
-        cartItem,
+        cartItems,
         addToCart,
-        getCartCount
+        getCartCount,
+        updateQuantity,
+        getCartAmount,
+        navigate
     }
 
     return (
