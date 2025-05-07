@@ -70,7 +70,7 @@ const Collections = () => {
     useEffect(() => {
         applyFilters();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [categories, subcategories, search, showSearch])
+    }, [categories, subcategories, search, showSearch, products])
 
     useEffect(() => {
         sortProduct();

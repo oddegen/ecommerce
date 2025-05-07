@@ -1,0 +1,25 @@
+meta {
+  name: add product
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/{{productURL}}/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: test_product 4
+  description: testing
+  price: 10
+  bestseller: true
+  category: Men
+  subCategory: Topwear
+  sizes: ["M"]
+  image1: @file(/home/oddegen/Personal/Assignment/SQAT/ecommerce-app/frontend/src/assets/p_img2_1.png)
+  image2: @file(/home/oddegen/Personal/Assignment/SQAT/ecommerce-app/frontend/src/assets/p_img2_2.png)
+  image3: @file(/home/oddegen/Personal/Assignment/SQAT/ecommerce-app/frontend/src/assets/p_img2_3.png)
+  image4: @file(/home/oddegen/Personal/Assignment/SQAT/ecommerce-app/frontend/src/assets/p_img2_4.png)
+}

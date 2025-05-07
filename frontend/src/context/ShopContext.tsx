@@ -1,8 +1,8 @@
-import { createContext, useContext, useState } from "react";
-import { products } from "../assets/assets";
+import { createContext, useContext, useEffect, useState } from "react";
 import { IProduct, SizeOptions } from "../types";
 import { toast } from "react-toastify";
 import { type NavigateFunction, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 type ICartItems = Record<string, Partial<Record<SizeOptions, number>>>;
 
@@ -15,11 +15,15 @@ interface IShopContext {
     showSearch: boolean;
     setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
     cartItems: ICartItems;
+    setCartItems: React.Dispatch<React.SetStateAction<ICartItems>>;
     addToCart: (productId: string, size: SizeOptions) => Promise<void>;
     getCartCount: () => number;
     updateQuantity: (itemId: string, size: SizeOptions, quantity: number) => Promise<void>;
     getCartAmount: () => number;
     navigate: NavigateFunction;
+    backendUrl: string;
+    token?: string;
+    setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 
@@ -28,9 +32,12 @@ const ShopContext = createContext<IShopContext | null>(null);
 const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
     const currency = '$'
     const delivery_fee = 10
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState<ICartItems>({});
+    const [products, setProducts] = useState<IProduct[]>([]);
+    const [token, setToken] = useState('');
     const navigate = useNavigate();
 
     const addToCart = async (productId: string, size: SizeOptions) => {
@@ -54,6 +61,19 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
         setCartItems(cartData);
+
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/cart', { itemId: productId, size }, {
+                    headers: {
+                        token
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+                toast.error(error.message);
+            }
+        }
     }
 
     const getCartCount = () => {
@@ -74,6 +94,19 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
         cartData[itemId][size] = quantity;
 
         setCartItems(cartData);
+
+        if (token) {
+            try {
+                await axios.put(backendUrl + '/api/cart', { itemId, size, quantity }, {
+                    headers: {
+                        token
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+                toast.error(error.message);
+            }
+        }
     }
 
     const getCartAmount = () => {
@@ -100,6 +133,49 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
         return totalAmount;
     }
 
+    const getProductsData = async () => {
+        try {
+            const response = await axios.get(backendUrl + '/api/products')
+            if (response.data.success === true) {
+                setProducts(response.data.products);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message);
+        }
+    }
+
+    const getUserCart = async (token) => {
+        try {
+            const response = await axios.get(backendUrl + '/api/cart', {
+                headers: {
+                    token
+                }
+            })
+
+            if (response.data.success === true) {
+                setCartItems(response.data.cartData);
+            }
+
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message)
+        }
+    }
+
+    useEffect(() => {
+        getProductsData();
+    }, [])
+
+    useEffect(() => {
+        if (!token && localStorage.getItem('token')) {
+            setToken(localStorage.getItem('token') || '');
+            getUserCart(localStorage.getItem('token'))
+        }
+    }, [])
+
     const value = {
         products,
         currency,
@@ -109,11 +185,15 @@ const ShopContextProvider = ({ children }: { children: React.ReactNode }) => {
         showSearch,
         setShowSearch,
         cartItems,
+        setCartItems,
         addToCart,
         getCartCount,
         updateQuantity,
         getCartAmount,
-        navigate
+        navigate,
+        backendUrl,
+        token,
+        setToken
     }
 
     return (
