@@ -1,10 +1,10 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   addToCart,
   getUserCart,
   updateCart,
-} from "../controllers/cartController.js";
-import authUser from "../middleware/auth.js";
+} = require("../controllers/cartController.js");
+const authUser = require("../middleware/auth.js");
 
 const cartRouter = express.Router();
 
@@ -12,4 +12,4 @@ cartRouter.get("/", authUser, getUserCart);
 cartRouter.post("/", authUser, addToCart);
 cartRouter.put("/", authUser, updateCart);
 
-export default cartRouter;
+module.exports = cartRouter;

@@ -1,7 +1,7 @@
-import validator from "validator";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import userModel from "../models/userModel.js";
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const userModel = require("../models/userModel.js");
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -123,4 +123,8 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin };
+module.exports = {
+  loginUser,
+  registerUser,
+  adminLogin,
+};

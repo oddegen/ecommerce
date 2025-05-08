@@ -1,17 +1,17 @@
-import { v2 as cloudinary } from "cloudinary";
-import productModel from "../models/productModel.js";
+const cloudinary = require("cloudinary").v2;
+const productModel = require("../models/productModel.js");
 
 const addProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      category,
-      subCategory,
-      sizes,
-      bestseller,
-    } = req.body;
+    // Ensure req.body is always an object
+    req.body = req.body || {};
+    const name = req.body.name || "";
+    const description = req.body.description || "";
+    const price = req.body.price || "0";
+    const category = req.body.category || "";
+    const subCategory = req.body.subCategory || "";
+    const sizes = req.body.sizes || "[]";
+    const bestseller = req.body.bestseller || "false";
 
     const image1 = req.files.image1 && req.files.image1[0];
     const image2 = req.files.image2 && req.files.image2[0];
@@ -135,4 +135,9 @@ const singleProduct = async (req, res) => {
   }
 };
 
-export { addProduct, listProducts, removeProduct, singleProduct };
+module.exports = {
+  addProduct,
+  listProducts,
+  removeProduct,
+  singleProduct,
+};

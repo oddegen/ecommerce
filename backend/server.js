@@ -1,32 +1,12 @@
-import express from "express";
-import cors from "cors";
-import "dotenv/config";
-import connectDb from "./config/mongodb.js";
-import connectCloudinary from "./config/cloudinary.js";
-import userRouter from "./routes/userRoute.js";
-import productRouter from "./routes/productRoute.js";
-import cartRouter from "./routes/cartRoute.js";
-import orderRouter from "./routes/orderRoute.js";
+const app = require("./app.js");
+const connectDb = require("./config/mongodb.js");
+const connectCloudinary = require("./config/cloudinary.js");
 
-const app = express();
-const PORT = process.env.PORT || 8080;
+// establish DB and Cloudinary connections
 connectDb();
 connectCloudinary();
-
-app.use(express.json());
-app.use(cors());
-
-app.use("/api/user", userRouter);
-app.use("/api/products", productRouter);
-app.use("/api/cart", cartRouter);
-app.use("/api/orders", orderRouter);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-export default app;

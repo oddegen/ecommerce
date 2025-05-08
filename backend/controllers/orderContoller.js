@@ -1,5 +1,5 @@
-import orderModel from "../models/orderModel.js";
-import userModel from "../models/userModel.js";
+const orderModel = require("../models/orderModel.js");
+const userModel = require("../models/userModel.js");
 
 const placeOrder = async (req, res) => {
   try {
@@ -86,4 +86,9 @@ const updateStatus = async (req, res) => {
   }
 };
 
-export { placeOrder, allOrders, userOrders, updateStatus };
+module.exports = {
+  placeOrder,
+  allOrders,
+  userOrders,
+  updateStatus,
+};

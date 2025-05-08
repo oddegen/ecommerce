@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   addProduct,
   listProducts,
   removeProduct,
   singleProduct,
-} from "../controllers/productController.js";
-import upload from "../middleware/multer.js";
-import adminAuth from "../middleware/adminAuth.js";
+} = require("../controllers/productController.js");
+const upload = require("../middleware/multer.js");
+const adminAuth = require("../middleware/adminAuth.js");
 
 const productRouter = express.Router();
 
@@ -25,4 +25,4 @@ productRouter.delete("/:id", adminAuth, removeProduct);
 productRouter.get("/:id", singleProduct);
 productRouter.get("/", listProducts);
 
-export default productRouter;
+module.exports = productRouter;

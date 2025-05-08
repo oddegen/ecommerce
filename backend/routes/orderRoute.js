@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   allOrders,
   placeOrder,
   updateStatus,
   userOrders,
-} from "../controllers/orderContoller.js";
-import adminAuth from "../middleware/adminAuth.js";
-import authUser from "../middleware/auth.js";
+} = require("../controllers/orderContoller.js");
+const adminAuth = require("../middleware/adminAuth.js");
+const authUser = require("../middleware/auth.js");
 
 const orderRouter = express.Router();
 
@@ -17,4 +17,4 @@ orderRouter.post("/place", authUser, placeOrder);
 
 orderRouter.get("/user", authUser, userOrders);
 
-export default orderRouter;
+module.exports = orderRouter;
