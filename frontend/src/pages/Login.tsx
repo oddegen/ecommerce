@@ -61,16 +61,16 @@ const Login = () => {
                 <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
             </div>
 
-            {currentState === 'Sign Up' && <input onChange={(e) => setName(e.target.value)} value={name} type="text" className="w-full px-3 py-2 border border-gray-800" placeholder="Name" required />}
-            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="w-full px-3 py-2 border border-gray-800" placeholder="Email" required />
-            <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="w-full px-3 py-2 border border-gray-800" placeholder="Password" required />
+            {currentState === 'Sign Up' && <input name="name" onChange={(e) => setName(e.target.value)} value={name} type="text" className="w-full px-3 py-2 border border-gray-800" placeholder="Name" required />}
+            <input name="email" onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="w-full px-3 py-2 border border-gray-800" placeholder="Email" required />
+            <input name="password" onChange={(e) => setPassword(e.target.value)} value={password} type="password" className="w-full px-3 py-2 border border-gray-800" placeholder="Password" required />
             <div className="w-full flex justify-between text-sm mt-[-8px]">
                 <p className="cursor-pointer">Forgot your password?</p>
                 {
                     currentState === 'Login' ? <p onClick={() => setCurrentState('Sign Up')} className="cursor-pointer">Create account</p> : <p className="text-gray-500">Already have an account? <span onClick={() => setCurrentState('Login')} className="text-gray-800 cursor-pointer">Login</span></p>
                 }
             </div>
-            <button className="bg-black text-white font-light px-8 py-2 mt-4">{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
+            <button type="submit" className="bg-black text-white font-light px-8 py-2 mt-4">{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
         </form>
     )
 }

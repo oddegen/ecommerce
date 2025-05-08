@@ -4,6 +4,7 @@ import CartTotal from "../components/CartTotal"
 import Title from "../components/Title"
 import { useShopContext } from "../context/ShopContext"
 import { toast } from "react-toastify"
+import axios from "axios"
 
 const PlaceOrder = () => {
 
